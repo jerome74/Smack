@@ -3,6 +3,7 @@ package jonnyb.example.smack
 import android.os.Bundle
 import android.view.Gravity
 import android.view.Menu
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -42,5 +43,17 @@ class MainActivity : AppCompatActivity() {
            drawer_layout.closeDrawer(GravityCompat.START)
         else
            super.onBackPressed()
+    }
+
+    fun onLoginBntClicked(view : View){
+
+    }
+
+    fun onAddProfileImgBntClicked(view : View){
+
+    }
+
+    fun onArrowImgBtnClicked(view: View){
+
     }
 }
