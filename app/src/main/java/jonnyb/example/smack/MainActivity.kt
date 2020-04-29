@@ -1,5 +1,6 @@
 package jonnyb.example.smack
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.Menu
@@ -17,6 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import jonnyb.example.smack.ui.login.LoginActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -46,7 +48,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onLoginBntClicked(view : View){
-
+        val intentLogin : Intent = Intent(this, LoginActivity::class.java)
+        startActivity(intentLogin)
     }
 
     fun onAddProfileImgBntClicked(view : View){
