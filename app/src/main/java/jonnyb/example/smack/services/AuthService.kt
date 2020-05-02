@@ -13,7 +13,7 @@ import org.json.JSONObject
 object AuthService {
 
 
-    fun registerUser(context: Context, user : User , complete : (Boolean) -> Unit ){
+    fun registerUser(context: Context, user : User , complete : (Boolean, String) -> Unit ){
 
         var uri : String = Constants.URI_REGISTER
 
@@ -21,8 +21,8 @@ object AuthService {
                 uri
                 ,user
                 , "application/json; charset=utf-8"
-                ,Response.Listener { it -> complete(true)}
-                ,Response.ErrorListener { error -> complete(false) } )
+                ,Response.Listener { it -> complete(true, "OK")}
+                ,Response.ErrorListener { error -> complete(false, error.message!!) } )
 
         Volley.newRequestQueue(context).add(baseStringRequest)
 

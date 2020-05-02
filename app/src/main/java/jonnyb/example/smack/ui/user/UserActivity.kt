@@ -5,7 +5,10 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import jonnyb.example.smack.R
+import jonnyb.example.smack.model.User
+import jonnyb.example.smack.services.AuthService
 import kotlinx.android.synthetic.main.activity_user.*
 import java.util.*
 
@@ -19,7 +22,19 @@ class UserActivity : AppCompatActivity() {
         setContentView(R.layout.activity_user)
     }
 
-    fun onCreateUserBtnClicked(view: View) {}
+    fun onCreateUserBtnClicked(view: View)
+    {
+        val user : User = User(emailAddTxt.text.toString(), pwdAddTxt.text.toString())
+
+        AuthService.registerUser(this,user, { esito: Boolean, messaggio: String ->
+            if(esito)
+                Toast.makeText(this, "user registered successfully", Toast.LENGTH_SHORT).show()
+            else
+                Toast.makeText(this, "error : $messaggio", Toast.LENGTH_SHORT).show()
+        })
+    }
+
+
     fun onGenBkColorBtnClicked(view: View)
     {
         val r : Int= Random().nextInt(255)
@@ -50,4 +65,7 @@ class UserActivity : AppCompatActivity() {
         resourceId = resources.getIdentifier(userAvatar, "drawable", packageName)
         avtAddImg.setImageResource(resourceId)
     }
+
+
+
 }
