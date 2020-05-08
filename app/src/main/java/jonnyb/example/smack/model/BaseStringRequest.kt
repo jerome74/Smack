@@ -8,7 +8,8 @@ class BaseStringRequest constructor(var uri: String
                                     ,val model : IModel
                                     ,val contentType : String
                                     ,val responseOK : Response.Listener<String>
-                                    ,val responseError : Response.ErrorListener) :
+                                    ,val responseError : Response.ErrorListener
+                                    ,val mapHeaders : MutableMap<String, String>?) :
                                     StringRequest(Request.Method.POST
                                                     ,uri
                                                     , responseOK
@@ -24,5 +25,13 @@ class BaseStringRequest constructor(var uri: String
 
     override fun getBodyContentType(): String {
         return contentType
+    }
+
+    override fun getHeaders(): MutableMap<String, String>
+    {
+        if(mapHeaders == null)
+            return super.getHeaders()
+        else
+            return mapHeaders!!
     }
 }

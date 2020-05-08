@@ -2,7 +2,7 @@ package jonnyb.example.smack.model
 
 import org.json.JSONObject
 
-class User constructor(var email: String, var password : String) : IModel
+data class User constructor(var email: String, var password : String) : IModel
 {
     override fun toRequest() : String {
         return toString()
