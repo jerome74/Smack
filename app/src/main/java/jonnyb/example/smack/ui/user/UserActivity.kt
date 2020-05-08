@@ -15,30 +15,44 @@ import jonnyb.example.smack.obj.UserObj
 import jonnyb.example.smack.services.AuthService
 import jonnyb.example.smack.services.LoginService
 import jonnyb.example.smack.services.UserService
+import jonnyb.example.smack.validation.BaseTextValidation
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_user.*
 import org.json.JSONObject
 import java.util.*
 
 class UserActivity : AppCompatActivity() {
 
-
+    var baseTextValidation : BaseTextValidation? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user)
+
+        manageSpinner(true, View.INVISIBLE)
+
+        baseTextValidation = BaseTextValidation(this
+            , listOf(userAddTxt,emailAddTxt,pwdAddTxt)
+            , listOf("Nome","Email","Password"))
     }
 
     fun onCreateUserBtnClicked(view: View)
     {
-        val account : Account = Account(emailAddTxt.text.toString(), pwdAddTxt.text.toString())
-        val user : User = User(emailAddTxt.text.toString(),pwdAddTxt.text.toString() )
-        val userProfile : UserProfile = UserProfile(userAddTxt.text.toString()
-            ,emailAddTxt.text.toString()
-            ,UserObj.userAvatar
-            ,UserObj.avatarColor)
+        if(baseTextValidation!!.validate()) {
 
-        callregisterUser(account,user,userProfile)
+            manageSpinner(false, View.VISIBLE)
 
+            val account: Account = Account(emailAddTxt.text.toString(), pwdAddTxt.text.toString())
+            val user: User = User(emailAddTxt.text.toString(), pwdAddTxt.text.toString())
+            val userProfile: UserProfile = UserProfile(
+                userAddTxt.text.toString()
+                , emailAddTxt.text.toString()
+                , UserObj.userAvatar
+                , UserObj.avatarColor
+            )
+
+            callregisterUser(account, user, userProfile)
+        }
 
     }
 
@@ -149,8 +163,22 @@ class UserActivity : AppCompatActivity() {
                 }
 
                 CompleteObj.esitoAddUser = esito
+                manageSpinner(true, View.INVISIBLE)
                 finish()
             })
+    }
+
+    fun manageSpinner(enable: Boolean, visibility : Int)
+    {
+            createPssBar.visibility = visibility;
+
+            userAddTxt.isEnabled    = enable
+            emailAddTxt.isEnabled   = enable
+            pwdAddTxt.isEnabled     = enable
+            genAvtTxt.isEnabled     = enable
+            avtAddImg.isEnabled     = enable
+            genBkColorBtn.isEnabled = enable
+            createUserBtn.isEnabled = enable
     }
 
 }
