@@ -1,10 +1,12 @@
 package jonnyb.example.smack.ui.user
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import jonnyb.example.smack.R
 import jonnyb.example.smack.model.Account
 import jonnyb.example.smack.model.User
@@ -15,6 +17,7 @@ import jonnyb.example.smack.obj.UserObj
 import jonnyb.example.smack.services.AuthService
 import jonnyb.example.smack.services.LoginService
 import jonnyb.example.smack.services.UserService
+import jonnyb.example.smack.utilities.Constants
 import jonnyb.example.smack.validation.BaseTextValidation
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_user.*
@@ -164,6 +167,7 @@ class UserActivity : AppCompatActivity() {
 
                 CompleteObj.esitoAddUser = esito
                 manageSpinner(true, View.INVISIBLE)
+                LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(Constants.BROADCAST_LOGIN))
                 finish()
             })
     }
