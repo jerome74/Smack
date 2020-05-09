@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
             UserObj.reset()
             CompleteObj.reset()
-            UserObj.reset()
+            AuthObj.reset()
 
         }
 
