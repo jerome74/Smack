@@ -3,10 +3,9 @@ package jonnyb.example.smack.services
 import android.content.Context
 import com.android.volley.Response
 import com.android.volley.toolbox.Volley
-import jonnyb.example.smack.model.BaseStringRequest
+import jonnyb.example.smack.model.BaseStringPostRequest
 import jonnyb.example.smack.model.User
 import jonnyb.example.smack.utilities.Constants
-import org.json.JSONObject
 
 object LoginService {
 
@@ -15,7 +14,7 @@ object LoginService {
 
         var uri : String = Constants.URI_LOGIN
 
-        val baseStringRequest : BaseStringRequest = BaseStringRequest(
+        val baseStringRequest : BaseStringPostRequest = BaseStringPostRequest(
             uri
             ,user
             , "application/json; charset=utf-8"

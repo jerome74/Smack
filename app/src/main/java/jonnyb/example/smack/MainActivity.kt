@@ -30,6 +30,7 @@ import jonnyb.example.smack.ui.login.LoginActivity
 import jonnyb.example.smack.utilities.Constants
 import jonnyb.example.smack.utilities.UtilString
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -70,6 +71,7 @@ class MainActivity : AppCompatActivity() {
         {
             wchatTxt.text = ""
             emailTxt.text = ""
+            channelNameTxt.text = "Please Log-in"
             loginBtn.text = "Log-In"
             userImg.setImageResource(R.drawable.profiledefault)
             userImg.setBackgroundColor(Color.TRANSPARENT)
@@ -97,6 +99,7 @@ class MainActivity : AppCompatActivity() {
             {
                 wchatTxt.text = UserObj.userProfile?.name
                 emailTxt.text = UserObj.userProfile?.email
+                channelNameTxt.text = UserObj.userProfile?.name
                 loginBtn.text = "Log-out"
 
                 val identifier = resources.getIdentifier(UserObj.userProfile?.avatarName,"drawable",packageName)
