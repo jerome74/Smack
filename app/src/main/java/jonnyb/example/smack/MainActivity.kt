@@ -1,14 +1,15 @@
 package jonnyb.example.smack
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.*
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -84,11 +85,31 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun onAddProfileImgBntClicked(view : View){
+    fun onAddChannelImgBntClicked(view : View){
+
+        if(!AuthObj.isLoggIn)
+        {
+            val builder = AlertDialog.Builder(this)
+            val dialogView = layoutInflater.inflate(R.layout.add_channel_dialog,null)
+
+            builder.setView(dialogView)
+                .setPositiveButton("add",{dialog: DialogInterface?, which: Int ->
+                val addChannelTxt = dialogView.findViewById<TextView>(R.id.addChannelTxT)
+                val addChannelDescTxt = dialogView.findViewById<TextView>(R.id.addChannelDescTxt)
+                val channelName = addChannelTxt.text.toString()
+                val channelDesc = addChannelDescTxt.text.toString()
+                })
+                .setNegativeButton("cancel", {dialog: DialogInterface?, which: Int ->
+
+
+                }).show()
+        }
 
     }
 
-    fun onArrowImgBtnClicked(view: View){
+    fun onArrowImgBtnClicked(view: View)
+    {
+
 
     }
 

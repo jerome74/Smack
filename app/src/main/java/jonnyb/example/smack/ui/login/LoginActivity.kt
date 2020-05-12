@@ -1,9 +1,12 @@
 package jonnyb.example.smack.ui.login
 
+import android.content.Context
 import android.content.Intent
+import android.hardware.input.InputManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import jonnyb.example.smack.R
@@ -34,6 +37,7 @@ class LoginActivity : AppCompatActivity() {
 
         val user : User = User(nameLoginTxt.text.toString(),passLoginTxt.text.toString())
         manageSpinner(false, View.VISIBLE)
+        hideKeyboard()
         callLoginUser(user)
 
     }
@@ -112,5 +116,13 @@ class LoginActivity : AppCompatActivity() {
         passLoginTxt.isEnabled   = enable
         loginBtn.isEnabled = enable
         signupBtn.isEnabled = enable
+    }
+
+
+    fun hideKeyboard(){
+        val inputManager : InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        if(inputManager.isAcceptingText)
+            inputManager.hideSoftInputFromWindow(currentFocus?.windowToken,0)
     }
 }
