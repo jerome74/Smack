@@ -9,6 +9,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -24,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import io.socket.client.IO
 import jonnyb.example.smack.obj.AuthObj
 import jonnyb.example.smack.obj.CompleteObj
 import jonnyb.example.smack.obj.UserObj
@@ -36,6 +38,7 @@ import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    val socket = IO.socket(Constants.BASE_URL);
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 
     fun onAddChannelImgBntClicked(view : View){
 
-        if(!AuthObj.isLoggIn)
+        if(AuthObj.isLoggIn)
         {
             val builder = AlertDialog.Builder(this)
             val dialogView = layoutInflater.inflate(R.layout.add_channel_dialog,null)
@@ -98,6 +101,9 @@ class MainActivity : AppCompatActivity() {
                 val addChannelDescTxt = dialogView.findViewById<TextView>(R.id.addChannelDescTxt)
                 val channelName = addChannelTxt.text.toString()
                 val channelDesc = addChannelDescTxt.text.toString()
+
+                socket.emit("newChannel" , channelName,channelDesc)
+
                 })
                 .setNegativeButton("cancel", {dialog: DialogInterface?, which: Int ->
 
@@ -109,8 +115,7 @@ class MainActivity : AppCompatActivity() {
 
     fun onArrowImgBtnClicked(view: View)
     {
-
-
+        hideKeyboard()
     }
 
     val loginReceiver = object : BroadcastReceiver() {
@@ -130,4 +135,37 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    fun hideKeyboard(){
+        val inputManager : InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        if(inputManager.isAcceptingText)
+            inputManager.hideSoftInputFromWindow(currentFocus?.windowToken,0)
+    }
+
+
+    override fun onRestart() {
+
+        super.onRestart()
+
+        if(socket == null || !socket.connected())
+            socket.connect();
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        if(socket == null || !socket.connected())
+            socket.connect();
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if(socket == null || !socket.connected())
+            socket.connect();
+    }
+
+
+
 }
