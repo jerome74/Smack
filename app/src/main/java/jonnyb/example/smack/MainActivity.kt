@@ -26,7 +26,9 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import io.socket.client.IO
+import jonnyb.example.smack.model.Channel
 import jonnyb.example.smack.obj.AuthObj
+import jonnyb.example.smack.obj.ChannelObj
 import jonnyb.example.smack.obj.CompleteObj
 import jonnyb.example.smack.obj.UserObj
 import jonnyb.example.smack.ui.login.LoginActivity
@@ -103,6 +105,11 @@ class MainActivity : AppCompatActivity() {
                 val channelDesc = addChannelDescTxt.text.toString()
 
                 socket.emit("newChannel" , channelName,channelDesc)
+                    socket.on("channelCreated" , {args ->
+                        runOnUiThread {
+                            ChannelObj.listChannel.add(Channel(args[0] as String,args[1] as String,args[2] as String))
+                        }
+                    })
 
                 })
                 .setNegativeButton("cancel", {dialog: DialogInterface?, which: Int ->
