@@ -69,6 +69,8 @@ class MainActivity : AppCompatActivity() {
         LocalBroadcastManager.getInstance(this).registerReceiver(loginReceiver, IntentFilter(
             Constants.BROADCAST_LOGIN))
 
+        setupAdapterChannel();
+
     }
 
     fun setupAdapterChannel()
