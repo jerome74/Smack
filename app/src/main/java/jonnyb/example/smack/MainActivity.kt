@@ -10,7 +10,10 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Adapter
+import android.widget.ArrayAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -27,20 +30,28 @@ import androidx.core.view.GravityCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import io.socket.client.IO
 import jonnyb.example.smack.model.Channel
+import jonnyb.example.smack.model.User
+import jonnyb.example.smack.model.UserProfile
 import jonnyb.example.smack.obj.AuthObj
 import jonnyb.example.smack.obj.ChannelObj
 import jonnyb.example.smack.obj.CompleteObj
 import jonnyb.example.smack.obj.UserObj
+import jonnyb.example.smack.services.ChannelService
+import jonnyb.example.smack.services.EmailService
 import jonnyb.example.smack.ui.login.LoginActivity
 import jonnyb.example.smack.utilities.Constants
 import jonnyb.example.smack.utilities.UtilString
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
+import org.json.JSONArray
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
     val socket = IO.socket(Constants.BASE_URL);
+
+    lateinit var  channnelAdapter : ArrayAdapter<Channel>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +69,14 @@ class MainActivity : AppCompatActivity() {
         LocalBroadcastManager.getInstance(this).registerReceiver(loginReceiver, IntentFilter(
             Constants.BROADCAST_LOGIN))
 
+    }
+
+    fun setupAdapterChannel()
+    {
+        channnelAdapter = ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, ChannelObj.listChannel)
+        channel_list.adapter = channnelAdapter
+
+        channnelAdapter.notifyDataSetChanged()
     }
 
     override fun onBackPressed()  {
@@ -171,6 +190,40 @@ class MainActivity : AppCompatActivity() {
 
         if(socket == null || !socket.connected())
             socket.connect();
+    }
+
+
+    fun callFindChannels(user : User)
+    {
+        ChannelService.findChannels(this
+            ,
+            {
+                    esito: Boolean, response: JSONArray ->
+                if(esito)
+                {
+                    for (x in 0  until response.length())
+                    {
+                        val responseJson : JSONObject = response.getJSONObject(x)
+
+                        val channel : Channel = Channel(responseJson.getString("name")
+                            , responseJson.getString("description")
+                            , responseJson.getString("_id"))
+
+                        ChannelObj.listChannel.add(channel)
+
+
+                        Toast.makeText(this, "Channels found successfully", Toast.LENGTH_SHORT).show()
+
+                    }
+                }
+                else
+                {
+                    Toast.makeText(this, "Channels found error", Toast.LENGTH_SHORT).show()
+                }
+
+                CompleteObj.esitoLoginUser = esito
+            })
+
     }
 
 

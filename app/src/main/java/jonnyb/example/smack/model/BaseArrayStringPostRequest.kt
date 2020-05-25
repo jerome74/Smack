@@ -1,19 +1,21 @@
 package jonnyb.example.smack.model
 
 import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.JsonArrayRequest
+import org.json.JSONArray
 
-class BaseStringPostRequest constructor(
+class BaseArrayStringPostRequest constructor(
     uri: String
-    , val model: IModel
+    , val model: IModel?
     , val contentType: String
-    , responseOK: Response.Listener<String>
+    , responseOK: Response.Listener<JSONArray>
     , responseError: Response.ErrorListener
     , val mapHeaders: MutableMap<String, String>?
 ) :
-    StringRequest(
-        Method.POST
+    JsonArrayRequest(
+        Method.GET
         , uri
+        ,null
         , responseOK
         , responseError
     ) {
@@ -24,7 +26,7 @@ class BaseStringPostRequest constructor(
 
     override fun getBody(): ByteArray {
         if (model == null)
-            return model.toRequest().toByteArray()
+            return model?.toRequest()!!.toByteArray()
         else
             return super.getBody()
     }
