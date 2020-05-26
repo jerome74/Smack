@@ -18,15 +18,12 @@ class BaseStringPostRequest constructor(
         , responseError
     ) {
 
-    override fun getParams(): MutableMap<String, String> {
-        return super.getParams()
-    }
 
     override fun getBody(): ByteArray {
         if (model == null)
-            return model.toRequest().toByteArray()
+            return super.getBody();
         else
-            return super.getBody()
+            return model.toRequest().toByteArray();
     }
 
     override fun getBodyContentType(): String {

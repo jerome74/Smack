@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
     val socket = IO.socket(Constants.BASE_URL);
 
-    lateinit var  channnelAdapter : ArrayAdapter<Channel>
+    lateinit var  nameChannelAdapter : ArrayAdapter<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,10 +75,10 @@ class MainActivity : AppCompatActivity() {
 
     fun setupAdapterChannel()
     {
-        channnelAdapter = ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, ChannelObj.listChannel)
-        channel_list.adapter = channnelAdapter
+        nameChannelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, ChannelObj.nameListChannel)
+        channel_list.adapter = nameChannelAdapter
 
-        channnelAdapter.notifyDataSetChanged()
+        nameChannelAdapter.notifyDataSetChanged()
     }
 
     override fun onBackPressed()  {
@@ -129,6 +129,8 @@ class MainActivity : AppCompatActivity() {
                     socket.on("channelCreated" , {args ->
                         runOnUiThread {
                             ChannelObj.listChannel.add(Channel(args[0] as String,args[1] as String,args[2] as String))
+                            ChannelObj.getArrayOfString()
+                            nameChannelAdapter.notifyDataSetChanged()
                         }
                     })
 
@@ -160,6 +162,8 @@ class MainActivity : AppCompatActivity() {
 
                 userImg.setImageResource(identifier)
                 userImg.setBackgroundColor(UtilString.stringToColor( UserObj.userProfile?.avatarColor!!))
+
+                callFindChannels()
             }
         }
     }
@@ -195,7 +199,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun callFindChannels(user : User)
+    fun callFindChannels()
     {
         ChannelService.findChannels(this
             ,
@@ -213,10 +217,10 @@ class MainActivity : AppCompatActivity() {
 
                         ChannelObj.listChannel.add(channel)
 
-
-                        Toast.makeText(this, "Channels found successfully", Toast.LENGTH_SHORT).show()
-
                     }
+
+                    ChannelObj.getArrayOfString()
+                    Toast.makeText(this, "Channels found successfully", Toast.LENGTH_SHORT).show()
                 }
                 else
                 {
