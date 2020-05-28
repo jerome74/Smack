@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity() {
                     socket.on("channelCreated" , {args ->
                         runOnUiThread {
                             ChannelObj.listChannel.add(Channel(args[0] as String,args[1] as String,args[2] as String))
-                            ChannelObj.getArrayOfString()
+                            ChannelObj.nameListChannel.add("#${args[0] as String}")
                             nameChannelAdapter.notifyDataSetChanged()
                         }
                     })
@@ -216,10 +216,11 @@ class MainActivity : AppCompatActivity() {
                             , responseJson.getString("_id"))
 
                         ChannelObj.listChannel.add(channel)
+                        ChannelObj.nameListChannel.add("#${channel.name}")
 
                     }
 
-                    ChannelObj.getArrayOfString()
+
                     Toast.makeText(this, "Channels found successfully", Toast.LENGTH_SHORT).show()
                 }
                 else
