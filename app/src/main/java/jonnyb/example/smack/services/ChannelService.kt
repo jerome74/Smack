@@ -24,7 +24,14 @@ object ChannelService {
             , "application/json; charset=utf-8"
             , Response.Listener<JSONArray> {
                     response -> complete(true, response)}
-            , Response.ErrorListener { error -> complete(false, JSONArray(){error}) } , mapHeader )
+            , Response.ErrorListener { error ->
+                try {
+                    complete(false, JSONArray(){error.message!!})
+                }catch (e : Exception){
+                    //Toast.makeText(context, "email and/or password incorrect.", Toast.LENGTH_SHORT).show()
+                    complete(false, JSONArray(){"\"error\":${error.message!!}"})
+                }
+            } , mapHeader )
 
         Volley.newRequestQueue(context).add(baseArrayStringPostRequest)
 

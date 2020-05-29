@@ -66,11 +66,23 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener { true }
 
+        ChannelObj.clear()
+
         LocalBroadcastManager.getInstance(this).registerReceiver(loginReceiver, IntentFilter(
             Constants.BROADCAST_LOGIN))
 
         setupAdapterChannel();
+        notifyEventuallyLogin();
 
+        channel_list.setOnItemClickListener { parent, view, position, id ->
+            updateChannelNameTxt(ChannelObj.nameListChannel[position]);
+                drawer_layout.closeDrawer(GravityCompat.START)
+        }
+
+    }
+
+    fun notifyEventuallyLogin() {
+        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(Constants.BROADCAST_LOGIN))
     }
 
     fun setupAdapterChannel()
@@ -106,6 +118,7 @@ class MainActivity : AppCompatActivity() {
             UserObj.reset()
             CompleteObj.reset()
             AuthObj.reset()
+            ChannelObj.clear()
 
         }
 
@@ -131,6 +144,9 @@ class MainActivity : AppCompatActivity() {
                             ChannelObj.listChannel.add(Channel(args[0] as String,args[1] as String,args[2] as String))
                             ChannelObj.nameListChannel.add("#${args[0] as String}")
                             nameChannelAdapter.notifyDataSetChanged()
+                            if(ChannelObj.nameListChannel.count() > 0)
+                                updateChannelNameTxt("#${args[0] as String}")
+
                         }
                     })
 
@@ -141,6 +157,11 @@ class MainActivity : AppCompatActivity() {
                 }).show()
         }
 
+    }
+
+    fun updateChannelNameTxt(text : String)
+    {
+        channelNameTxt.text = text
     }
 
     fun onArrowImgBtnClicked(view: View)
@@ -217,7 +238,9 @@ class MainActivity : AppCompatActivity() {
 
                         ChannelObj.listChannel.add(channel)
                         ChannelObj.nameListChannel.add("#${channel.name}")
-
+                        nameChannelAdapter.notifyDataSetChanged()
+                        if(ChannelObj.nameListChannel.count() > 0)
+                            updateChannelNameTxt(ChannelObj.nameListChannel[0])
                     }
 
 
@@ -233,6 +256,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onDestroy() {
+        ChannelObj.clear()
+        super.onDestroy()
+    }
 
 
 }

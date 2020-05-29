@@ -19,7 +19,14 @@ object AuthService {
                 ,account
                 , "application/json; charset=utf-8"
                 ,Response.Listener { it -> complete(true, "OK")}
-                ,Response.ErrorListener { error -> complete(false, error.message!!) } , null )
+                ,Response.ErrorListener { error ->
+                try {
+                    complete(false, error.message!!)
+                }catch (e : Exception){
+                    //Toast.makeText(context, "email and/or password incorrect.", Toast.LENGTH_SHORT).show()
+                    complete(false, "${e.message}")
+                }
+            } , null )
 
         Volley.newRequestQueue(context).add(baseStringRequest)
 

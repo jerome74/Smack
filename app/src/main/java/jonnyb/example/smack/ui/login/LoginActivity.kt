@@ -59,16 +59,24 @@ class LoginActivity : AppCompatActivity() {
                     esito: Boolean, messaggio: String ->
                 if(esito)
                 {
-                    val responseJson : JSONObject = JSONObject(messaggio)
-                    AuthObj.isLoggIn = true
-                    AuthObj.token = responseJson.getString("token")
+                    try{
+                        val responseJson : JSONObject = JSONObject(messaggio)
+                        AuthObj.isLoggIn = true
+                        AuthObj.token = responseJson.getString("token")
 
-                    Toast.makeText(this, "user Login successfully", Toast.LENGTH_SHORT).show()
-                    callFindProfileByEmail(user)
+                        Toast.makeText(this, "user Login successfully", Toast.LENGTH_SHORT).show()
+                        callFindProfileByEmail(user)
+
+                    }catch(e : Exception){
+                        Toast.makeText(this, "error : ${e.message}", Toast.LENGTH_SHORT).show()
+                        manageSpinner(true, View.INVISIBLE)
+                    }
+
                 }
                 else
                 {
                     Toast.makeText(this, "login error : $messaggio", Toast.LENGTH_SHORT).show()
+                    manageSpinner(true, View.INVISIBLE)
                 }
 
                 CompleteObj.esitoLoginUser = esito
@@ -84,23 +92,31 @@ class LoginActivity : AppCompatActivity() {
                     esito: Boolean, messaggio: String ->
                 if(esito)
                 {
-                    val responseJson : JSONObject = JSONObject(messaggio)
+                    try{
+                        val responseJson : JSONObject = JSONObject(messaggio)
 
-                    val userProfile : UserProfile = UserProfile(responseJson.getString("name")
-                                                                , responseJson.getString("email")
-                                                                , responseJson.getString("avatarName")
-                                                                , responseJson.getString("avatarColor"))
-                    UserObj.userProfile = userProfile
-                    manageSpinner(true, View.INVISIBLE)
-                    LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(Constants.BROADCAST_LOGIN))
-                    finish()
+                        val userProfile : UserProfile = UserProfile(responseJson.getString("name")
+                                                                    , responseJson.getString("email")
+                                                                    , responseJson.getString("avatarName")
+                                                                    , responseJson.getString("avatarColor"))
+                        UserObj.userProfile = userProfile
+                        manageSpinner(true, View.INVISIBLE)
+                        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(Constants.BROADCAST_LOGIN))
+                        finish()
 
-                    Toast.makeText(this, "profile found successfully", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "profile found successfully", Toast.LENGTH_SHORT).show()
+
+                }catch(e : Exception){
+                Toast.makeText(this, "error : ${e.message}", Toast.LENGTH_SHORT).show()
+                manageSpinner(true, View.INVISIBLE)
+            }
 
                 }
                 else
                 {
                     Toast.makeText(this, "profile found error : $messaggio", Toast.LENGTH_SHORT).show()
+                    manageSpinner(true, View.INVISIBLE)
+                    finish()
                 }
 
                 CompleteObj.esitoLoginUser = esito

@@ -10,7 +10,7 @@ object Constants {
 
     //######################BASE_URI####################################
     //const val BASE_URL : String = "https://wlproject01.herokuapp.com"
-    const val BASE_URL : String = "http://192.168.1.8:3005"
+    const val BASE_URL : String = "http://192.168.1.6:3005"
     //const val BASE_URL : String = "http://192.168.43.135:3005"
     //-------------------------------------------------------------------
 
