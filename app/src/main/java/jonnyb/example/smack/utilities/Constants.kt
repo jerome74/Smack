@@ -19,6 +19,7 @@ object Constants {
     const val URI_CREATE_USER : String = "$BASE_URL/v1/user/add"
     const val URI_FIND_BY_EMAIL : String = "$BASE_URL/v1/user/byEmail"
     const val URI_FIND_CHANNELS : String = "$BASE_URL/v1/channel"
+    const val URI_FIND_MESSAGES : String = "$BASE_URL/v1/message/byChannel"
 
     /**
      * BROADCAST

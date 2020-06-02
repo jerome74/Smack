@@ -14,11 +14,9 @@ object UserObj
         set(value) = ThisApplication.shardPrefs.userProfile(value)
 
 
-    var IdUserProfile : String? = null;
 
     fun reset() {
          userAvatar    = "profileDefault"
          avatarColor   = "[0.5, 0.5, 0.5, 1]"
-         IdUserProfile = null;
     }
 }

@@ -39,14 +39,16 @@ class SharedPrefs(val context : Context)
     }
 
     fun userProfile() : UserProfile{
-        Log.d("#userProfile", "get ${context.getSharedPreferences("prefs",0).getString("email","")!!}")
-        return UserProfile(context.getSharedPreferences("prefs",0).getString("userProfile.name","")!!
+        //Log.d("#userProfile", "get ${context.getSharedPreferences("prefs",0).getString("email","")!!}")
+        return UserProfile(context.getSharedPreferences("prefs",0).getString("userProfile._id","")!!
+                           , context.getSharedPreferences("prefs",0).getString("userProfile.name","")!!
                            , context.getSharedPreferences("prefs",0).getString("userProfile.email","")!!
                            , context.getSharedPreferences("prefs",0).getString("userProfile.avatarName","")!!
                            , context.getSharedPreferences("prefs",0).getString("userProfile.avatarColor","")!!)
     }
 
     fun userProfile(value : UserProfile) : Unit{
+        context.getSharedPreferences("prefs",0).edit().putString("userProfile._id", value._id).apply()
         context.getSharedPreferences("prefs",0).edit().putString("userProfile.name", value.name).apply()
         context.getSharedPreferences("prefs",0).edit().putString("userProfile.email", value.email).apply()
         context.getSharedPreferences("prefs",0).edit().putString("userProfile.avatarName", value.avatarName).apply()

@@ -5,10 +5,10 @@ import jonnyb.example.smack.model.Channel
 object ChannelObj
 {
     var listChannel = ArrayList<Channel>()
-    var nameListChannel = ArrayList<String>()
+    var channelSelected : Channel? = null
 
     fun clear() {
         listChannel.clear()
-        nameListChannel.clear()
+        channelSelected = null
     }
 }

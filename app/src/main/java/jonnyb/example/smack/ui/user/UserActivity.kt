@@ -47,12 +47,11 @@ class UserActivity : AppCompatActivity() {
 
             val account: Account = Account(emailAddTxt.text.toString(), pwdAddTxt.text.toString())
             val user: User = User(emailAddTxt.text.toString(), pwdAddTxt.text.toString())
-            val userProfile: UserProfile = UserProfile(
+            val userProfile: UserProfile = UserProfile(UUID.randomUUID().toString().subSequence(0, 5).toString(),
                 userAddTxt.text.toString()
                 , emailAddTxt.text.toString()
                 , UserObj.userAvatar
-                , UserObj.avatarColor
-            )
+                , UserObj.avatarColor)
 
             callregisterUser(account, user, userProfile)
         }
@@ -157,8 +156,14 @@ class UserActivity : AppCompatActivity() {
                 {
                     val responseJson : JSONObject = JSONObject(messaggio)
                     Toast.makeText(this, "user added successfully", Toast.LENGTH_SHORT).show()
+
+                    userProfile._id = responseJson.getString("_id")
+                    userProfile.name = responseJson.getString("name")
+                    userProfile.email = responseJson.getString("email")
+                    userProfile.avatarName = responseJson.getString("avatarName")
+                    userProfile.avatarColor = responseJson.getString("avatarColor")
+
                     UserObj.userProfile = userProfile
-                    UserObj.IdUserProfile = responseJson.getString("_id")
                 }
                 else
                 {

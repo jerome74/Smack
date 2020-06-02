@@ -2,7 +2,8 @@ package jonnyb.example.smack.model
 
 import org.json.JSONObject
 
-data class UserProfile constructor( var name : String
+data class UserProfile constructor(   var _id : String
+                                    , var name : String
                                     , var email : String
                                     , var avatarName : String
                                     , var avatarColor : String) : IModel

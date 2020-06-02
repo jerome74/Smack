@@ -95,7 +95,8 @@ class LoginActivity : AppCompatActivity() {
                     try{
                         val responseJson : JSONObject = JSONObject(messaggio)
 
-                        val userProfile : UserProfile = UserProfile(responseJson.getString("name")
+                        val userProfile : UserProfile = UserProfile( responseJson.getString("_id")
+                                                                    , responseJson.getString("name")
                                                                     , responseJson.getString("email")
                                                                     , responseJson.getString("avatarName")
                                                                     , responseJson.getString("avatarColor"))

@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.*
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.Menu
@@ -30,14 +31,13 @@ import androidx.core.view.GravityCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import io.socket.client.IO
 import jonnyb.example.smack.model.Channel
+import jonnyb.example.smack.model.Message
 import jonnyb.example.smack.model.User
 import jonnyb.example.smack.model.UserProfile
-import jonnyb.example.smack.obj.AuthObj
-import jonnyb.example.smack.obj.ChannelObj
-import jonnyb.example.smack.obj.CompleteObj
-import jonnyb.example.smack.obj.UserObj
+import jonnyb.example.smack.obj.*
 import jonnyb.example.smack.services.ChannelService
 import jonnyb.example.smack.services.EmailService
+import jonnyb.example.smack.services.MessageService
 import jonnyb.example.smack.ui.login.LoginActivity
 import jonnyb.example.smack.utilities.Constants
 import jonnyb.example.smack.utilities.UtilString
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
     val socket = IO.socket(Constants.BASE_URL);
 
-    lateinit var  nameChannelAdapter : ArrayAdapter<String>
+    lateinit var  nameChannelAdapter : ArrayAdapter<Channel>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +75,8 @@ class MainActivity : AppCompatActivity() {
         notifyEventuallyLogin();
 
         channel_list.setOnItemClickListener { parent, view, position, id ->
-            updateChannelNameTxt(ChannelObj.nameListChannel[position]);
+            updateChannelNameTxt(ChannelObj.listChannel[position].name);
+            ChannelObj.channelSelected =ChannelObj.listChannel[position]
                 drawer_layout.closeDrawer(GravityCompat.START)
         }
 
@@ -87,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
     fun setupAdapterChannel()
     {
-        nameChannelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, ChannelObj.nameListChannel)
+        nameChannelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, ChannelObj.listChannel)
         channel_list.adapter = nameChannelAdapter
 
         nameChannelAdapter.notifyDataSetChanged()
@@ -142,10 +143,14 @@ class MainActivity : AppCompatActivity() {
                     socket.on("channelCreated" , {args ->
                         runOnUiThread {
                             ChannelObj.listChannel.add(Channel(args[0] as String,args[1] as String,args[2] as String))
-                            ChannelObj.nameListChannel.add("#${args[0] as String}")
+
                             nameChannelAdapter.notifyDataSetChanged()
-                            if(ChannelObj.nameListChannel.count() > 0)
+
+                            if(ChannelObj.listChannel.count() > 0)
+                            {
+                                ChannelObj.channelSelected = ChannelObj.listChannel[0]
                                 updateChannelNameTxt("#${args[0] as String}")
+                            }
 
                         }
                     })
@@ -164,8 +169,46 @@ class MainActivity : AppCompatActivity() {
         channelNameTxt.text = text
     }
 
+    var messageCreated = socket.on("messageCreated" , {args ->
+        runOnUiThread {
+            MessageObj.listMessage.add(Message(args[0] as String
+                                    ,args[1] as String
+                                    ,args[2] as String
+                                    ,args[3] as String
+                                    ,args[4] as String
+                                    ,args[5] as String
+                                    ,args[6] as String
+                                    ,args[7] as String))
+
+        }
+    })
+
     fun onArrowImgBtnClicked(view: View)
     {
+        var messageBody = msgMultilineTxt.text.toString()
+        var userId = UserObj.userProfile._id
+        var channelId  = ChannelObj.channelSelected!!.id
+        var userName = UserObj.userProfile.name
+        var userAvatar = UserObj.userProfile.avatarName
+        var userAvatarColor = UserObj.userProfile.avatarColor
+
+        socket.emit("newMessage"
+            , messageBody
+            , userId
+            , channelId
+            , userName
+            , userAvatar
+            , userAvatarColor
+        )
+
+        Log.d("newMessage" , "messageBody:${messageBody}"+
+                ", userId:${userId}"+
+                ", channelId:${channelId}"+
+                ", userName:${userName}"+
+                ", userAvatar:${userAvatar}"+
+                ", userAvatarColor:${userAvatarColor}" )
+
+        msgMultilineTxt.text.clear()
         hideKeyboard()
     }
 
@@ -174,7 +217,7 @@ class MainActivity : AppCompatActivity() {
         {
             if (AuthObj.isLoggIn)
             {
-                wchatTxt.text = UserObj.userProfile?.name
+                wchatTxt.text = "Log-In"
                 emailTxt.text = UserObj.userProfile?.email
                 channelNameTxt.text = UserObj.userProfile?.name
                 loginBtn.text = "Log-out"
@@ -185,6 +228,7 @@ class MainActivity : AppCompatActivity() {
                 userImg.setBackgroundColor(UtilString.stringToColor( UserObj.userProfile?.avatarColor!!))
 
                 callFindChannels()
+
             }
         }
     }
@@ -237,10 +281,12 @@ class MainActivity : AppCompatActivity() {
                             , responseJson.getString("_id"))
 
                         ChannelObj.listChannel.add(channel)
-                        ChannelObj.nameListChannel.add("#${channel.name}")
+                        ChannelObj.channelSelected = channel
                         nameChannelAdapter.notifyDataSetChanged()
-                        if(ChannelObj.nameListChannel.count() > 0)
-                            updateChannelNameTxt(ChannelObj.nameListChannel[0])
+
+                        updateChannelNameTxt(channel.name)
+
+                        callFindMessages()
                     }
 
 
@@ -255,6 +301,55 @@ class MainActivity : AppCompatActivity() {
             })
 
     }
+
+    fun callFindMessages()
+    {
+        MessageService.findMessages(this, ChannelObj.channelSelected!!
+            ,
+            {
+                    esito: Boolean, response: JSONArray ->
+                if(esito)
+                {
+                    for (x in 0  until response.length())
+                    {
+                        val responseJson : JSONObject = response.getJSONObject(x)
+
+                        var _id = responseJson.getString("_id")
+                        var messageBody = responseJson.getString("messageBody")
+                        var userId = responseJson.getString("userId")
+                        var channelId = responseJson.getString("channelId")
+                        var userName = responseJson.getString("userName")
+                        var userAvatar = responseJson.getString("userAvatar")
+                        var userAvatarColor = responseJson.getString("userAvatarColor")
+                        var timeStamp = responseJson.getString("timeStamp")
+
+                        val message : Message = Message(messageBody
+                        ,  userId
+                        ,  channelId
+                        ,  userName
+                        ,  userAvatar
+                        ,  userAvatarColor
+                        ,  _id
+                        ,  timeStamp)
+
+                        Log.d("callFindMessages" ,message.toString())
+
+                            MessageObj.listMessage.add(message)
+                    }
+
+
+                    Toast.makeText(this, "Messages found successfully", Toast.LENGTH_SHORT).show()
+                }
+                else
+                {
+                    Toast.makeText(this, "Messages found error", Toast.LENGTH_SHORT).show()
+                }
+
+                CompleteObj.esitoLoginUser = esito
+            })
+
+    }
+
 
     override fun onDestroy() {
         ChannelObj.clear()
