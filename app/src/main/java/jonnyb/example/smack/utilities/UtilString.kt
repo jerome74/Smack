@@ -5,14 +5,25 @@ import java.util.*
 
 object UtilString
 {
-    fun stringToColor(str : String) : Int {
+    fun stringToColor(str : String) : Int? {
 
-        var scanner = Scanner(str.replace("[","").replace("]","").replace(",",""))
+        var rgb : Int? = null
 
-        if(scanner.hasNext())
-            return Color.rgb((scanner.nextDouble() * 255).toInt(),(scanner.nextDouble() * 255).toInt(),(scanner.nextDouble() * 255).toInt())
+        try {
+            var scanner = Scanner(str.replace("[", "").replace("]", "").replace(",", ""))
 
-        return 0
+            if (scanner.hasNext())
+                rgb =  Color.rgb(
+                    (scanner.nextDouble() * 255).toInt(),
+                    (scanner.nextDouble() * 255).toInt(),
+                    (scanner.nextDouble() * 255).toInt()
+                )
 
+        }catch (e : Exception)
+        {
+            rgb =  Color.rgb((0.5 * 255).toInt(),(0.5 * 255).toInt(),(0.5 * 255).toInt())
+        }
+
+        return rgb!!
     }
 }

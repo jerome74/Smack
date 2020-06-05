@@ -29,7 +29,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import io.socket.client.IO
+import jonnyb.example.smack.adapter.MessageAdapter
 import jonnyb.example.smack.model.Channel
 import jonnyb.example.smack.model.Message
 import jonnyb.example.smack.model.User
@@ -52,6 +54,7 @@ class MainActivity : AppCompatActivity() {
     val socket = IO.socket(Constants.BASE_URL);
 
     lateinit var  nameChannelAdapter : ArrayAdapter<Channel>
+    lateinit var  messageAdapter : MessageAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,13 +74,14 @@ class MainActivity : AppCompatActivity() {
         LocalBroadcastManager.getInstance(this).registerReceiver(loginReceiver, IntentFilter(
             Constants.BROADCAST_LOGIN))
 
-        setupAdapterChannel();
+        setupAdapterChannel()
+        setupAdapterMessage()
         notifyEventuallyLogin();
 
         channel_list.setOnItemClickListener { parent, view, position, id ->
-            updateChannelNameTxt(ChannelObj.listChannel[position].name);
             ChannelObj.channelSelected =ChannelObj.listChannel[position]
-                drawer_layout.closeDrawer(GravityCompat.START)
+            updateChannelNameTxt(ChannelObj.listChannel[position].name);
+            drawer_layout.closeDrawer(GravityCompat.START)
         }
 
     }
@@ -92,6 +96,14 @@ class MainActivity : AppCompatActivity() {
         channel_list.adapter = nameChannelAdapter
 
         nameChannelAdapter.notifyDataSetChanged()
+    }
+
+    fun setupAdapterMessage()
+    {
+        messageAdapter = MessageAdapter(this,MessageObj.listMessage)
+        msgsResView.adapter = messageAdapter
+        msgsResView.layoutManager = LinearLayoutManager(this)
+        messageAdapter.notifyDataSetChanged()
     }
 
     override fun onBackPressed()  {
@@ -120,7 +132,10 @@ class MainActivity : AppCompatActivity() {
             CompleteObj.reset()
             AuthObj.reset()
             ChannelObj.clear()
+            MessageObj.clear()
 
+            nameChannelAdapter.notifyDataSetChanged()
+            messageAdapter.notifyDataSetChanged()
         }
 
     }
@@ -166,7 +181,9 @@ class MainActivity : AppCompatActivity() {
 
     fun updateChannelNameTxt(text : String)
     {
+        MessageObj.listMessage.clear()
         channelNameTxt.text = text
+        callFindMessages()
     }
 
     var messageCreated = socket.on("messageCreated" , {args ->
@@ -179,6 +196,9 @@ class MainActivity : AppCompatActivity() {
                                     ,args[5] as String
                                     ,args[6] as String
                                     ,args[7] as String))
+
+            messageAdapter.notifyDataSetChanged()
+            msgsResView.smoothScrollToPosition(messageAdapter.itemCount - 1)
 
         }
     })
@@ -225,7 +245,7 @@ class MainActivity : AppCompatActivity() {
                 val identifier = resources.getIdentifier(UserObj.userProfile?.avatarName,"drawable",packageName)
 
                 userImg.setImageResource(identifier)
-                userImg.setBackgroundColor(UtilString.stringToColor( UserObj.userProfile?.avatarColor!!))
+                userImg.setBackgroundColor(UtilString.stringToColor( UserObj.userProfile?.avatarColor!!)!!)
 
                 callFindChannels()
 
@@ -281,13 +301,15 @@ class MainActivity : AppCompatActivity() {
                             , responseJson.getString("_id"))
 
                         ChannelObj.listChannel.add(channel)
-                        ChannelObj.channelSelected = channel
-                        nameChannelAdapter.notifyDataSetChanged()
 
-                        updateChannelNameTxt(channel.name)
-
-                        callFindMessages()
                     }
+
+                    if(ChannelObj.listChannel.size > 0) {
+                        ChannelObj.channelSelected = ChannelObj.listChannel[0]
+                        nameChannelAdapter.notifyDataSetChanged()
+                        updateChannelNameTxt(ChannelObj.listChannel[0].name)
+                    }
+
 
 
                     Toast.makeText(this, "Channels found successfully", Toast.LENGTH_SHORT).show()
@@ -345,14 +367,22 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Messages found error", Toast.LENGTH_SHORT).show()
                 }
 
+                messageAdapter.notifyDataSetChanged()
                 CompleteObj.esitoLoginUser = esito
             })
+
+
+        if(messageAdapter.itemCount > 0){
+            msgsResView.smoothScrollToPosition(messageAdapter.itemCount - 1)
+        }
+
 
     }
 
 
     override fun onDestroy() {
         ChannelObj.clear()
+        MessageObj.clear()
         super.onDestroy()
     }
 
