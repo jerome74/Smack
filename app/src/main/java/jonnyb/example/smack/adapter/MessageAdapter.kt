@@ -1,6 +1,7 @@
 package jonnyb.example.smack.adapter
 
 import android.content.Context
+import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import jonnyb.example.smack.R
 import jonnyb.example.smack.model.Message
-import jonnyb.example.smack.obj.MessageObj
+import jonnyb.example.smack.obj.UserObj
 import jonnyb.example.smack.utilities.UtilString
 import java.text.SimpleDateFormat
 import java.util.*
@@ -39,18 +40,54 @@ class MessageAdapter(val context: Context, val messages : ArrayList<Message>) : 
         val dateTxt = itemView.findViewById<TextView>(R.id.tvDateListMessage)
         val contentTxt = itemView.findViewById<TextView>(R.id.tvContentListMessage)
 
+        val userImageO = itemView.findViewById<ImageView>(R.id.imgListMessageO)
+        val userTxtO = itemView.findViewById<TextView>(R.id.tvOwnListMessageO)
+        val dateTxtO = itemView.findViewById<TextView>(R.id.tvDateListMessageO)
+        val contentTxtO = itemView.findViewById<TextView>(R.id.tvContentListMessageO)
+
         fun bindingMessage(context: Context, message: Message)
         {
-            val resourceId = context.resources.getIdentifier(message.userAvatar,"drawable", context.packageName)
-            userImage.setImageResource(resourceId)
-            userImage.setBackgroundColor(UtilString.stringToColor(message.userAvatarColor)!!)
+            if(UserObj.userProfile?.name == message.userName)
+            {
+                setVisibility(View.VISIBLE, View.INVISIBLE)
 
-            userTxt.text = message.userName
+                val resourceId = context.resources.getIdentifier(message.userAvatar,"drawable", context.packageName)
+                userImage.setImageResource(resourceId)
+                userImage.setBackgroundColor(UtilString.stringToColor(message.userAvatarColor)!!)
 
-            dateTxt.text =  SimpleDateFormat("E, dd - HH:mm", Locale.getDefault()).format(dateFormat.parse(message.timeStamp))
-            contentTxt.text = message.messageBody
+                userTxt.text = message.userName
 
+                dateTxt.text =  SimpleDateFormat("E, dd - HH:mm", Locale.getDefault()).format(dateFormat.parse(message.timeStamp))
+                contentTxt.text = message.messageBody
 
+            }
+            else
+            {
+                setVisibility(View.INVISIBLE, View.VISIBLE)
+
+                val resourceId = context.resources.getIdentifier(message.userAvatar,"drawable", context.packageName)
+                userImageO.setImageResource(resourceId)
+                userImageO.setBackgroundColor(UtilString.stringToColor(message.userAvatarColor)!!)
+
+                userTxtO.text = message.userName
+
+                dateTxtO.text =  SimpleDateFormat("E, dd - HH:mm", Locale.getDefault()).format(dateFormat.parse(message.timeStamp))
+                contentTxtO.text = message.messageBody
+            }
+
+        }
+
+        private fun setVisibility(left : Int , right : Int)
+        {
+            userImage.visibility = left
+            userTxt.visibility = left
+            dateTxt.visibility = left
+            contentTxt.visibility = left
+
+            userImageO.visibility = right
+            userTxtO.visibility = right
+            dateTxtO.visibility = right
+            contentTxtO.visibility = right
         }
 
     }

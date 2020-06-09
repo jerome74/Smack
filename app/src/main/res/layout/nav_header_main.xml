@@ -84,4 +84,16 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="109dp" />
 
+    <Button
+        android:id="@+id/mapBtn"
+        android:layout_width="88dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/transparent"
+        android:onClick="onMapBtn"
+        android:text="Maps"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -41,6 +41,7 @@ import jonnyb.example.smack.services.ChannelService
 import jonnyb.example.smack.services.EmailService
 import jonnyb.example.smack.services.MessageService
 import jonnyb.example.smack.ui.login.LoginActivity
+import jonnyb.example.smack.ui.map.MapsActivity
 import jonnyb.example.smack.utilities.Constants
 import jonnyb.example.smack.utilities.UtilString
 import kotlinx.android.synthetic.main.activity_main.*
@@ -385,6 +386,17 @@ class MainActivity : AppCompatActivity() {
         MessageObj.clear()
         super.onDestroy()
     }
+
+
+    /*******************************************************************/
+    // TEST MAP
+
+    fun onMapBtn(view: View){
+        val intentLogin : Intent = Intent(this, MapsActivity::class.java)
+        startActivity(intentLogin)
+    }
+
+    /*******************************************************************/
 
 
 }

@@ -7,7 +7,7 @@
 
     <ImageView
         android:id="@+id/imgListMessage"
-        android:layout_width="34dp"
+        android:layout_width="33dp"
         android:layout_height="33dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -21,6 +21,8 @@
         android:layout_height="19dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:textColor="@color/design_default_color_error"
+        android:textColorLink="@color/design_default_color_error"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="wlongo" />
@@ -37,17 +39,22 @@
 
     <TextView
         android:id="@+id/tvContentListMessage"
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:textAlignment="textStart"
+        android:textColor="@color/design_default_color_primary_variant"
+        android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/tvDateListMessage"
-        tools:text="Cantami, o diva, del Pelìde Achille l’ira funesta che infiniti addusse lutti agli achei , molte anzi tempo all’orcogenerose travolse alme d’eroi, e di cani e d’augelli orrido pastolor salme abbandonò (così di giove l’alto consiglio s’adempia ) , da quandoprimamente disgiunse aspra contesail re de’ prodi Atride e il divo Achille. " />
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="prova" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -55,4 +62,77 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="48dp" />
+
+    <ImageView
+        android:id="@+id/imgListMessageO"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toTopOf="@+id/guideline4"
+        app:layout_constraintVertical_bias="0.072"
+        tools:srcCompat="@drawable/dark10" />
+
+    <TextView
+        android:id="@+id/tvOwnListMessageO"
+        android:layout_width="47dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
+        android:textAlignment="textEnd"
+        android:textColor="@color/design_default_color_error"
+        android:textColorLink="@color/design_default_color_error"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imgListMessageO"
+        app:layout_constraintTop_toTopOf="@+id/guideline4"
+        app:layout_constraintVertical_bias="0.061"
+        tools:text="paolo" />
+
+    <TextView
+        android:id="@+id/tvDateListMessageO"
+        android:layout_width="110dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:textAlignment="textEnd"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvOwnListMessageO"
+        app:layout_constraintTop_toTopOf="@+id/guideline4"
+        app:layout_constraintVertical_bias="0.063"
+        tools:text="Mar 11, 10:30 PM" />
+
+    <TextView
+        android:id="@+id/tvContentListMessageO"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="8dp"
+        android:textAlignment="textEnd"
+        android:textColor="@color/design_default_color_primary_variant"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDateListMessageO"
+        app:layout_constraintVertical_bias="0.662"
+        tools:text="prova" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="410dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="70dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
